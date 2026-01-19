@@ -1,0 +1,72 @@
+# Phase 1 Proof of Concept Configuration
+# Gradient-Based Causal Discovery for Molecular Property Prediction
+
+# Task definitions
+tasks:
+  bace:
+    type: classification
+    target_column: Class
+    smiles_column: mol
+    url: https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/bace.csv
+
+  bbbp:
+    type: classification
+    target_column: p_np
+    smiles_column: smiles
+    url: https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/BBBP.csv
+
+  esol:
+    type: regression
+    target_column: "measured log solubility in mols per litre"
+    smiles_column: smiles
+    url: https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/delaney-processed.csv
+
+  lipophilicity:
+    type: regression
+    target_column: exp
+    smiles_column: smiles
+    url: https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/Lipophilicity.csv
+
+  herg:
+    type: classification
+    target_column: Y
+    smiles_column: Drug
+    url: local  # Downloaded separately from TDC
+
+# Model architecture
+model:
+  input_dim: 2048
+  encoder_hidden_dims: [512, 256]
+  head_hidden_dim: 128
+  dropout: 0.2
+  fingerprint_bits: 2048
+  fingerprint_radius: 2  # ECFP4 = radius 2
+
+# Training parameters
+training:
+  batch_size: 32
+  epochs: 100
+  learning_rate: 0.0001
+  weight_decay: 0.01
+  early_stopping_patience: 20
+  gradient_log_interval: 10  # Log gradients every N steps
+  gradient_clip_norm: 1.0
+
+# Data splitting
+splitting:
+  train_ratio: 0.8
+  val_ratio: 0.1
+  test_ratio: 0.1
+  random_seed: 42
+
+# Output paths
+output:
+  checkpoints_dir: outputs/checkpoints
+  gradients_dir: outputs/gradients
+  figures_dir: outputs/figures
+
+# Expected validation patterns (for hypothesis testing)
+expected_patterns:
+  esol_lipophilicity: -0.5  # Strong negative (physicochemical trade-off)
+  bbbp_herg: 0.3            # Positive (ADME cluster)
+  bace_bbbp: -0.2           # Negative (selectivity vs permeability)
