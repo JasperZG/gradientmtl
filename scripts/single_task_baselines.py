@@ -186,7 +186,7 @@ def train_single_task_model(
     val_dataset = MultiTaskGraphDataset(val_graphs, val_labels, single_types)
     test_dataset = MultiTaskGraphDataset(test_graphs, test_labels, single_types)
 
-    train_loader = PyGDataLoader(train_dataset, batch_size=config['batch_size'], shuffle=True)
+    train_loader = PyGDataLoader(train_dataset, batch_size=config['batch_size'], shuffle=True, drop_last=True)
     val_loader = PyGDataLoader(val_dataset, batch_size=config['batch_size'])
     test_loader = PyGDataLoader(test_dataset, batch_size=config['batch_size'])
 
@@ -268,8 +268,11 @@ def train_single_task_model(
                 pred = torch.sigmoid(outputs[mask.bool()].squeeze())
                 target = y[mask.bool()]
 
-                val_preds.extend(pred.cpu().numpy())
-                val_labels_list.extend(target.cpu().numpy())
+                # Handle 0-d arrays (single predictions)
+                pred_np = pred.cpu().numpy()
+                target_np = target.cpu().numpy()
+                val_preds.extend(pred_np.flatten().tolist())
+                val_labels_list.extend(target_np.flatten().tolist())
 
         if len(val_preds) > 0 and len(np.unique(val_labels_list)) > 1:
             val_auc = roc_auc_score(val_labels_list, val_preds)
@@ -306,8 +309,11 @@ def train_single_task_model(
             pred = torch.sigmoid(outputs[mask.bool()].squeeze())
             target = y[mask.bool()]
 
-            test_preds.extend(pred.cpu().numpy())
-            test_labels_list.extend(target.cpu().numpy())
+            # Handle 0-d arrays (single predictions)
+            pred_np = pred.cpu().numpy()
+            target_np = target.cpu().numpy()
+            test_preds.extend(pred_np.flatten().tolist())
+            test_labels_list.extend(target_np.flatten().tolist())
 
     if len(test_preds) > 0 and len(np.unique(test_labels_list)) > 1:
         test_auc = roc_auc_score(test_labels_list, test_preds)

@@ -50,16 +50,20 @@ htmlcov/
 # Output directories (regenerated during training)
 outputs/*
 !outputs/.gitkeep
+!outputs/gradients/
+outputs/gradients/*
+!outputs/gradients/gnn_conflict_matrices.npz
 
-# Large data files
+# Large data files (model checkpoints, etc.)
 *.pt
 *.pth
-*.npz
-*.npy
 *.pkl
 *.pickle
 *.h5
 *.hdf5
+
+# Keep gradient matrix for HPC experiments
+# !outputs/gradients/gnn_conflict_matrices.npz
 
 # CSV data files (downloaded during runtime)
 data/*.csv

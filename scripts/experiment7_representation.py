@@ -36,7 +36,7 @@ project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
 from data.preprocessing import MoleculePreprocessor
-from data.dataset import MultiTaskDataset
+from data.dataset import MultiTaskMoleculeDataset as MultiTaskDataset
 from models.encoder import SharedEncoder
 from models.heads import TaskHead
 from models.multitask import MultiTaskModel
@@ -384,8 +384,9 @@ def run_representation_experiment(
     # Load Tox21 data and compute ECFP fingerprints
     print("\nLoading Tox21 data and computing ECFP fingerprints...")
 
-    from data.download import download_tox21
-    tox21_path = download_tox21()
+    tox21_path = project_root / 'outputs' / 'raw_data' / 'tox21.csv'
+    if not tox21_path.exists():
+        raise FileNotFoundError(f"Tox21 data not found at {tox21_path}. Run pre-training first.")
     df = pd.read_csv(tox21_path)
 
     # Compute fingerprints
