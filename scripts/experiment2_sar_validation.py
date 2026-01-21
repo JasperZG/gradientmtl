@@ -389,7 +389,7 @@ def run_sar_validation(
 
     print(f"\nEmpirical Validation Results:")
     print(f"  Pearson r (G vs E):  {empirical_pearson_r:.4f} (p = {empirical_pearson_p:.4f})")
-    print(f"  Spearman ρ (G vs E): {empirical_spearman_r:.4f} (p = {empirical_spearman_p:.4f})")
+    print(f"  Spearman rho (G vs E): {empirical_spearman_r:.4f} (p = {empirical_spearman_p:.4f})")
     print(f"  Sign agreement:      {empirical_sign_agreement:.1%}")
 
     # =========================================================================
@@ -521,7 +521,7 @@ def run_sar_validation(
     print("\n--- PRIMARY: Empirical Validation ---")
     emp = results['empirical_validation']
     print(f"Pearson r (G vs Empirical): {emp['pearson_r']:.4f} (p = {emp['pearson_p']:.4f})")
-    print(f"Spearman ρ (G vs Empirical): {emp['spearman_r']:.4f} (p = {emp['spearman_p']:.4f})")
+    print(f"Spearman rho (G vs Empirical): {emp['spearman_r']:.4f} (p = {emp['spearman_p']:.4f})")
     print(f"Sign agreement: {emp['sign_agreement']:.1%}")
     print(f"Valid pairs analyzed: {emp['n_valid_pairs']}")
 
@@ -554,27 +554,27 @@ def run_sar_validation(
     emp_p = emp['pearson_p']
 
     if emp_r > 0.3:
-        print(f"✓ Empirical Pearson r > 0.3: PASS ({emp_r:.3f})")
+        print(f"[PASS] Empirical Pearson r > 0.3: PASS ({emp_r:.3f})")
     elif emp_r > 0.2:
         print(f"~ Empirical Pearson r > 0.3: MARGINAL ({emp_r:.3f})")
     else:
-        print(f"✗ Empirical Pearson r > 0.3: FAIL ({emp_r:.3f})")
+        print(f"[FAIL] Empirical Pearson r > 0.3: FAIL ({emp_r:.3f})")
         success = False
 
     if emp_p < 0.05:
-        print(f"✓ Empirical p < 0.05: PASS ({emp_p:.4f})")
+        print(f"[PASS] Empirical p < 0.05: PASS ({emp_p:.4f})")
     else:
-        print(f"✗ Empirical p < 0.05: FAIL ({emp_p:.4f})")
+        print(f"[FAIL] Empirical p < 0.05: FAIL ({emp_p:.4f})")
         success = False
 
     if emp['sign_agreement'] > 0.6:
-        print(f"✓ Empirical sign agreement > 60%: PASS ({emp['sign_agreement']:.1%})")
+        print(f"[PASS] Empirical sign agreement > 60%: PASS ({emp['sign_agreement']:.1%})")
     else:
         print(f"~ Empirical sign agreement > 60%: MARGINAL ({emp['sign_agreement']:.1%})")
 
     if 'silhouette_score' in results:
         if results['silhouette_score'] > 0.5:
-            print(f"✓ Silhouette > 0.5: PASS ({results['silhouette_score']:.3f})")
+            print(f"[PASS] Silhouette > 0.5: PASS ({results['silhouette_score']:.3f})")
         else:
             # Silhouette is a soft criterion - low score just means tasks are relatively independent
             print(f"~ Silhouette > 0.5: SOFT FAIL ({results['silhouette_score']:.3f}) - tasks may be independent")

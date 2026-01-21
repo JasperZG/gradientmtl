@@ -484,7 +484,7 @@ def run_representation_experiment(
         print("COMPARISON RESULTS")
         print("-" * 50)
         print(f"Pearson correlation: r = {comparison['pearson_r']:.4f} (p = {comparison['pearson_p']:.2e})")
-        print(f"Spearman correlation: ρ = {comparison['spearman_r']:.4f}")
+        print(f"Spearman correlation: rho = {comparison['spearman_r']:.4f}")
         print(f"Mean absolute error: {comparison['mae']:.4f}")
         print(f"Sign agreement: {comparison['sign_agreement']:.1%}")
 
@@ -492,7 +492,7 @@ def run_representation_experiment(
         for disc in comparison['largest_discrepancies'][:5]:
             print(f"  {disc['task1']} vs {disc['task2']}: "
                   f"ECFP={disc['ECFP_value']:.3f}, GNN={disc['GNN_value']:.3f}, "
-                  f"Δ={disc['difference']:.3f}")
+                  f"diff={disc['difference']:.3f}")
 
     # Save results
     results_file = output_dir / 'representation_results.json'
@@ -506,13 +506,13 @@ def run_representation_experiment(
     print("=" * 70)
 
     if comparison['pearson_r'] > 0.8:
-        print(f"✓ Pearson r > 0.8: PASS ({comparison['pearson_r']:.3f})")
+        print(f"[PASS] Pearson r > 0.8: PASS ({comparison['pearson_r']:.3f})")
         results['representation_consistent'] = True
     elif comparison['pearson_r'] > 0.6:
-        print(f"⚠ Pearson r > 0.8: PARTIAL ({comparison['pearson_r']:.3f} > 0.6)")
+        print(f"[PARTIAL] Pearson r > 0.8: PARTIAL ({comparison['pearson_r']:.3f} > 0.6)")
         results['representation_consistent'] = 'partial'
     else:
-        print(f"✗ Pearson r > 0.8: FAIL ({comparison['pearson_r']:.3f})")
+        print(f"[FAIL] Pearson r > 0.8: FAIL ({comparison['pearson_r']:.3f})")
         results['representation_consistent'] = False
 
     return results

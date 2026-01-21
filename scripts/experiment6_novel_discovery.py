@@ -416,9 +416,9 @@ def run_novel_discovery(
     print(f"Novel synergies found: {len(synergies)}")
 
     if len(tradeoffs) >= 3:
-        print("✓ SUCCESS: Found 3+ novel trade-offs for expert validation")
+        print("[PASS] SUCCESS: Found 3+ novel trade-offs for expert validation")
     else:
-        print("⚠ WARNING: Fewer than 3 novel trade-offs found")
+        print("[WARN] WARNING: Fewer than 3 novel trade-offs found")
 
     return results
 
