@@ -2,16 +2,41 @@
 
 Discovering mechanistic relationships between molecular properties through gradient conflict analysis in multi-task learning.
 
-## Key Finding
+## Key Findings
+
+### 1. Method Validation
 
 **Gradient conflicts capture real biological relationships when tasks share compound overlap.**
 
-| Dataset | Compound Overlap | G vs Empirical Correlation |
-|---------|-----------------|---------------------------|
-| Tox21 (12 toxicity endpoints) | 100% | r = 0.918 *** |
-| ADME (diverse properties) | ~1% | r = 0.394 (n.s.) |
+| Dataset | Tasks | Overlap | G vs Empirical | Status |
+|---------|-------|---------|----------------|--------|
+| Tox21 (toxicity panel) | 12 | 100% | r = 0.918*** | PASS |
+| ToxCast (diverse assays) | 17 | 100% | r = 0.862*** | PASS |
+| Diverse Properties | 6 | 5-40% | r = -0.34 (n.s.) | FAIL |
+| ADME (merged datasets) | 4 | ~1% | r = 0.394 (n.s.) | FAIL |
 
-This validates that gradient-based analysis can discover property trade-offs, but requires datasets where the same compounds are measured across all tasks.
+### 2. Overlap Threshold
+
+**~50% compound overlap required for reliable results.**
+
+| Overlap | Correlation | Status |
+|---------|-------------|--------|
+| 100% | r = 0.927*** | PASS |
+| 75% | r = 0.875*** | PASS |
+| 50% | r = 0.814*** | PASS |
+| 25% | r = 0.599*** | MARGINAL |
+| 10% | r = 0.472*** | MARGINAL |
+
+### 3. Assay Diversity
+
+ToxCast validation demonstrates method generalizes across 7 assay families:
+- **ATG**: Gene expression reporters (AP-1, AP-2 pathways)
+- **BSK**: BioSeek immune panel (E-selectin, ICAM-1, HLA-DR)
+- **NVS**: Nuclear receptors (hER, bER)
+- **APR**: High-content imaging (cell cycle arrest)
+- **ACEA**: Cell proliferation
+- **OT**: Odyssey Thera
+- **Tanguay**: Zebrafish developmental toxicity
 
 ## Project Structure
 
@@ -39,16 +64,14 @@ gradientproject/
 │   └── visualization.py           # Heatmaps, plots
 ├── scripts/
 │   ├── run_local.py               # Local experiment runner
-│   ├── submit_all_cshl.sh         # HPC job submission
-│   ├── experiment2_sar_validation.py
-│   ├── experiment3_transfer_learning.py
-│   ├── experiment4_task_selection.py
-│   ├── experiment5_pcgrad.py
-│   ├── experiment6_novel_discovery.py
-│   ├── experiment7_representation.py
+│   ├── test_overlap_threshold.py  # Overlap threshold analysis
+│   ├── prepare_toxcast_diverse.py # ToxCast data preparation
+│   ├── curate_diverse_properties.py
 │   └── slurm_*.sh                 # SLURM job scripts
-├── train_tox21_gnn.py          # Main GNN training script
-├── train_adme_gnn.py           # ADME dataset training
+├── train_tox21_gnn.py          # Tox21 GNN training (primary)
+├── train_toxcast_gnn.py        # ToxCast validation (Strategy A)
+├── train_diverse_gnn.py        # Diverse properties (Strategy B)
+├── train_adme_gnn.py           # ADME negative control
 └── outputs/
     └── gradients/
         └── gnn_conflict_matrices.npz  # Pre-computed gradient matrix
@@ -62,17 +85,18 @@ gradientproject/
 pip install torch torch-geometric rdkit-pypi scipy pandas numpy matplotlib seaborn
 ```
 
-### 2. Run Local Experiments
+### 2. Run Validation Experiments
 
 ```bash
-# Run all local experiments (pre-training + analysis)
-python scripts/run_local.py
+# Primary validation (Tox21)
+python train_tox21_gnn.py --epochs 50
 
-# Or run individual steps:
-python scripts/run_local.py --pretrain      # Train GNN, generate gradient matrix
-python scripts/run_local.py --exp 2         # SAR validation
-python scripts/run_local.py --exp 7         # ECFP vs GNN comparison
-python scripts/run_local.py --baselines     # Single-task baselines
+# Strategy A: Dataset generalization (ToxCast)
+python scripts/prepare_toxcast_diverse.py
+python train_toxcast_gnn.py --epochs 30
+
+# Overlap threshold analysis
+python scripts/test_overlap_threshold.py
 ```
 
 ### 3. Run HPC Experiments
@@ -87,37 +111,22 @@ bash scripts/submit_all_cshl.sh
 
 ## Experiments
 
-| Exp | Name | Description | Location |
-|-----|------|-------------|----------|
-| 2 | SAR Validation | Validate gradient conflicts vs empirical correlations | Local |
-| 3 | Transfer Learning | Test if G predicts transfer success | HPC (792 jobs) |
-| 4 | Task Selection | Compare selection algorithms | HPC (20 jobs) |
-| 5 | PCGrad | Validate PCGrad helps conflicting pairs | HPC (15 jobs) |
-| 6 | Novel Discovery | Find unexpected trade-offs | Local |
-| 7 | Representation | Compare ECFP vs GNN gradients | Local |
+### Local Experiments (Completed)
 
-## Results Summary
+| Exp | Name | Result |
+|-----|------|--------|
+| 2 | SAR Validation | r = 0.918*** (Tox21) |
+| 7 | Representation | r = 0.853 (ECFP vs GNN) |
+| - | ToxCast Validation | r = 0.862*** |
+| - | Overlap Threshold | 50% threshold identified |
 
-### Tox21 Validation (Experiment 2)
+### HPC Experiments (Pending)
 
-- **Pearson r = 0.918** between gradient conflicts and empirical correlations
-- p < 0.001 (highly significant)
-- Validates that gradient analysis captures real biological relationships
-
-### Representation Generalization (Experiment 7)
-
-- **r = 0.853** correlation between ECFP and GNN gradient matrices
-- Gradient patterns are consistent across molecular representations
-
-### Key Insight: Compound Overlap Requirement
-
-The gradient conflict approach works when:
-- All tasks measured on the same compounds (e.g., Tox21 panel)
-- Sufficient data overlap for gradient comparison
-
-It fails when:
-- Tasks from different compound libraries (e.g., combining MoleculeNet datasets)
-- Low compound overlap between tasks
+| Exp | Name | Description | Jobs |
+|-----|------|-------------|------|
+| 3 | Transfer Learning | Test if G predicts transfer success | 792 |
+| 4 | Task Selection | Compare selection algorithms | 20 |
+| 5 | PCGrad | Validate PCGrad helps conflicting pairs | 15 |
 
 ## Gradient Conflict Matrix
 
@@ -131,18 +140,24 @@ G[i,j] = cosine_similarity(grad_i, grad_j)
 - G[i,j] < 0: Tasks conflict (gradients oppose)
 - G[i,j] = 0: Tasks are independent
 
-## HPC Job Configuration
+## Key Insights
 
-| Experiment | Jobs | Time/Job | Total GPU-Hours |
-|------------|------|----------|-----------------|
-| Exp 3 (Transfer) | 792 | ~30 min | ~400 |
-| Exp 4 (Selection) | 20 | ~30 min | ~10 |
-| Exp 5 (PCGrad) | 15 | ~1 hour | ~15 |
-| **Total** | **827** | | **~425** |
+### When It Works
+- Panel assays with 100% compound overlap (Tox21, ToxCast)
+- Overlap >= 50% for reliable correlations
+- Generalizes across assay types within toxicology
+
+### When It Fails
+- Merged datasets from different compound libraries
+- Overlap < 25% produces marginal results
+- Cross-domain properties (binding + ADME + toxicity) lack overlap in public data
+
+### Implications
+- Gradient conflicts are a valid signal for task relationships
+- Method requires intentional experimental design (same compounds, multiple endpoints)
+- Ideal for pharma screening panels where compounds are tested across many assays
 
 ## Citation
-
-If you use this code, please cite:
 
 ```bibtex
 @article{gradient_causal_discovery,
