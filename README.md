@@ -80,14 +80,16 @@ gradientproject/
 │   ├── empirical_correlations.py  # Compute correlations from data
 │   ├── statistical_tests.py       # Permutation tests, bootstrap CI
 │   └── visualization.py           # Heatmaps, plots
-├── scripts/                    # Experiment and data scripts
+├── experiments/                # Training scripts for each experiment
+│   ├── train_tox21_gnn.py      # Primary: Tox21 GNN training
+│   ├── train_toxcast_gnn.py    # ToxCast validation
+│   ├── train_tox21_adme_gnn.py # Cross-domain validation
+│   └── train_*.py              # Other experiment configurations
+├── scripts/                    # Data preparation and analysis scripts
 │   ├── augment_tox21_with_adme.py    # Create cross-domain dataset
 │   ├── validate_tox21_adme_correlation.py  # Key validation script
 │   ├── test_overlap_threshold.py     # Overlap threshold analysis
 │   └── experiment*.py                # Individual experiment scripts
-├── train_tox21_gnn.py          # Primary: Tox21 GNN training
-├── train_toxcast_gnn.py        # ToxCast validation
-├── train_tox21_adme_gnn.py     # Cross-domain validation
 ├── config.yaml                 # Hyperparameters
 ├── requirements.txt            # Python dependencies
 ├── RESULTS.md                  # Detailed experimental results
@@ -109,15 +111,15 @@ pip install torch torch-geometric rdkit-pypi scipy pandas numpy matplotlib seabo
 
 ```bash
 # Primary validation (Tox21)
-python train_tox21_gnn.py --epochs 50
+python experiments/train_tox21_gnn.py --epochs 50
 
 # Strategy A: Dataset generalization (ToxCast)
 python scripts/prepare_toxcast_diverse.py
-python train_toxcast_gnn.py --epochs 30
+python experiments/train_toxcast_gnn.py --epochs 30
 
 # Strategy B: Cross-domain validation (Tox21 + ADME)
-python scripts/augment_tox21_with_adme.py    # Creates matched dataset
-python train_tox21_adme_gnn.py --epochs 30   # Trains and validates
+python scripts/augment_tox21_with_adme.py         # Creates matched dataset
+python experiments/train_tox21_adme_gnn.py --epochs 30  # Trains and validates
 
 # Overlap threshold analysis
 python scripts/test_overlap_threshold.py
