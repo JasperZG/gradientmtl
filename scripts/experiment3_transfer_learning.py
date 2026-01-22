@@ -11,6 +11,11 @@ Full experimental design:
 
 Total: 132 × 3 × 2 = 792 independent runs
 
+OPTIMIZED: Uses cached pretrained encoders to avoid redundant pretraining.
+  Phase 1: python experiment3_transfer_learning.py --pretrain  (~3 hours, 1 GPU)
+  Phase 2: python experiment3_transfer_learning.py --job-index N  (parallel across GPUs)
+  Phase 3: python experiment3_transfer_learning.py --aggregate
+
 Uses GNN encoder for stronger gradient signal.
 """
 
@@ -292,6 +297,7 @@ def run_single_transfer_experiment(
     device: torch.device,
     output_dir: Path,
     seed: int,
+    checkpoint_dir: Path = None,
 ):
     """
     Run a single transfer learning experiment.
@@ -331,19 +337,28 @@ def run_single_transfer_experiment(
     print(f"Training samples: {len(subsampled_train_idx)} (regime: n={data_regime})")
 
     if condition == 'transfer':
-        # Step 1: Pretrain on source task (full training data)
-        print(f"\n[1/2] Pretraining on {source_task} (full data)...")
-        _, source_model = train_single_task(
-            task_name=source_task,
-            graphs=graphs,
-            labels=labels,
-            train_idx=train_idx,
-            val_idx=val_idx,
-            config=config,
-            device=device,
-            output_dir=exp_dir / 'pretrain',
-        )
-        pretrained_encoder = source_model.encoder.state_dict()
+        # Try to load cached pretrained encoder first
+        pretrained_encoder = None
+        if checkpoint_dir is not None:
+            checkpoint_path = Path(checkpoint_dir) / f"{source_task}_encoder.pt"
+            if checkpoint_path.exists():
+                print(f"\n[1/2] Loading cached encoder from {checkpoint_path}")
+                pretrained_encoder = torch.load(checkpoint_path, map_location=device)
+
+        # If no cached checkpoint, train from scratch
+        if pretrained_encoder is None:
+            print(f"\n[1/2] Pretraining on {source_task} (full data)...")
+            _, source_model = train_single_task(
+                task_name=source_task,
+                graphs=graphs,
+                labels=labels,
+                train_idx=train_idx,
+                val_idx=val_idx,
+                config=config,
+                device=device,
+                output_dir=exp_dir / 'pretrain',
+            )
+            pretrained_encoder = source_model.encoder.state_dict()
 
         # Step 2: Fine-tune on target task with pretrained encoder
         print(f"\n[2/2] Fine-tuning on {target_task} (n={data_regime})...")
@@ -471,10 +486,57 @@ def aggregate_transfer_results(output_dir: Path):
     print(f"\nAggregation complete.")
 
 
+def pretrain_all_sources(graphs, labels, train_idx, val_idx, config, device, checkpoint_dir, seed):
+    """
+    Phase 1: Pretrain all 12 source models and save encoder checkpoints.
+    Only needs to run ONCE. Takes ~3 hours on single GPU.
+    """
+    checkpoint_dir = Path(checkpoint_dir)
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+
+    print("\n" + "=" * 60)
+    print("PHASE 1: Pretraining all source models")
+    print("=" * 60)
+
+    for i, task in enumerate(TASK_NAMES):
+        checkpoint_path = checkpoint_dir / f"{task}_encoder.pt"
+
+        if checkpoint_path.exists():
+            print(f"\n[{i+1}/12] {task}: checkpoint exists, skipping")
+            continue
+
+        print(f"\n[{i+1}/12] Pretraining on {task}...")
+
+        torch.manual_seed(seed)
+        np.random.seed(seed)
+
+        _, model = train_single_task(
+            task_name=task,
+            graphs=graphs,
+            labels=labels,
+            train_idx=train_idx,
+            val_idx=val_idx,
+            config=config,
+            device=device,
+            output_dir=checkpoint_dir / f"{task}_pretrain",
+        )
+
+        torch.save(model.encoder.state_dict(), checkpoint_path)
+        print(f"  Saved checkpoint to {checkpoint_path}")
+
+    print("\n" + "=" * 60)
+    print("PHASE 1 COMPLETE: All source models pretrained")
+    print("=" * 60)
+
+
 def main():
     parser = argparse.ArgumentParser(description='Transfer Learning Validation (Full Matrix)')
+    parser.add_argument('--pretrain', action='store_true',
+                       help='Phase 1: Pretrain all 12 source models and cache checkpoints')
+    parser.add_argument('--run-all', action='store_true',
+                       help='Phase 2: Run all 792 jobs sequentially')
     parser.add_argument('--job-index', type=int, default=None,
-                       help='SLURM array task ID (0-791). If not provided, runs all.')
+                       help='SLURM array task ID (0-791).')
     parser.add_argument('--source-task', type=str, default=None,
                        help='Source task (overrides job-index)')
     parser.add_argument('--target-task', type=str, default=None,
@@ -493,12 +555,15 @@ def main():
     parser.add_argument('--gradient-matrix', type=str,
                        default='outputs/gradients/gnn_conflict_matrices.npz')
     parser.add_argument('--output-dir', type=str, default='outputs/experiment3')
+    parser.add_argument('--checkpoint-dir', type=str, default='outputs/experiment3/checkpoints',
+                       help='Directory for cached pretrained encoders')
     parser.add_argument('--aggregate', action='store_true',
                        help='Aggregate all results instead of running experiment')
     args = parser.parse_args()
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
+    checkpoint_dir = Path(args.checkpoint_dir)
 
     # Aggregate mode
     if args.aggregate:
@@ -547,6 +612,20 @@ def main():
         'dropout': 0.3,
     }
 
+    # Phase 1: Pretrain all source models
+    if args.pretrain:
+        pretrain_all_sources(
+            graphs=graphs,
+            labels=labels,
+            train_idx=train_idx,
+            val_idx=val_idx,
+            config=config,
+            device=device,
+            checkpoint_dir=checkpoint_dir,
+            seed=args.seed,
+        )
+        return
+
     # Determine what to run
     if args.source_task and args.target_task and args.data_regime and args.condition:
         # Manual override
@@ -559,10 +638,17 @@ def main():
     elif args.job_index is not None:
         # Single job from array
         jobs_to_run = [get_job_config(args.job_index)]
-    else:
-        # Run all 792 jobs (not recommended - use array jobs)
-        print("WARNING: Running all 792 jobs sequentially. Use --job-index for array jobs.")
+    elif args.run_all:
+        # Run all 792 jobs sequentially
+        print("Running all 792 jobs sequentially...")
         jobs_to_run = [get_job_config(i) for i in range(792)]
+    else:
+        print("Usage:")
+        print("  Step 1: python experiment3_transfer_learning.py --pretrain")
+        print("  Step 2: python experiment3_transfer_learning.py --run-all")
+        print("          OR python experiment3_transfer_learning.py --job-index N")
+        print("  Step 3: python experiment3_transfer_learning.py --aggregate")
+        return
 
     # Run experiments
     all_results = []
@@ -582,6 +668,7 @@ def main():
             device=device,
             output_dir=output_dir,
             seed=args.seed,
+            checkpoint_dir=checkpoint_dir,
         )
         all_results.append(result)
 
