@@ -36,6 +36,9 @@ env/
 .pydevproject
 .settings/
 
+# Claude Code
+.claude/
+
 # Jupyter
 .ipynb_checkpoints/
 *.ipynb
@@ -47,14 +50,7 @@ htmlcov/
 .tox/
 .nox/
 
-# Output directories (regenerated during training)
-outputs/*
-!outputs/.gitkeep
-!outputs/gradients/
-outputs/gradients/*
-!outputs/gradients/gnn_conflict_matrices.npz
-
-# Large data files (model checkpoints, etc.)
+# Large binary files (model checkpoints)
 *.pt
 *.pth
 *.pkl
@@ -62,12 +58,28 @@ outputs/gradients/*
 *.h5
 *.hdf5
 
-# Keep gradient matrix for HPC experiments
-# !outputs/gradients/gnn_conflict_matrices.npz
-
-# CSV data files (downloaded during runtime)
+# Data files (downloaded during runtime)
 data/*.csv
+data/*.tab
 *.csv.gz
+
+# Outputs directory - exclude everything except key results
+# First, exclude all outputs
+outputs/*
+
+# Keep the .gitkeep and specific result directories
+!outputs/.gitkeep
+!outputs/gradients/
+!outputs/sar_validation/
+!outputs/tox21_adme_results/
+!outputs/figures/
+
+# But within those directories, exclude large binary files
+outputs/**/*.pt
+outputs/**/*.npz
+
+# Explicitly keep the main gradient matrix (small, required for HPC)
+!outputs/gradients/gnn_conflict_matrices.npz
 
 # Logs
 *.log
@@ -77,6 +89,7 @@ logs/
 .DS_Store
 Thumbs.db
 desktop.ini
+nul
 
 # Temporary files
 *.tmp

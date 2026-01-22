@@ -1,0 +1,17 @@
+{
+  "pearson_r": 0.6064175204845544,
+  "p_value": 0.0,
+  "n_pairs": 113,
+  "significance": "***",
+  "within_tox_r": 0.9522983982957923,
+  "within_tox_p": 6.426210805736334e-15,
+  "within_adme_r": 0.6611547252735113,
+  "within_adme_p": 0.0008074676690607191,
+  "cross_domain_r": 0.2258993057808649,
+  "cross_domain_p": 0.0750424666268963,
+  "comparison": {
+    "tox21": 0.918,
+    "toxcast": 0.862,
+    "tox21_adme": 0.6064175204845544
+  }
+}
