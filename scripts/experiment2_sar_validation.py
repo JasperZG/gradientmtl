@@ -67,8 +67,9 @@ KNOWN_CLUSTERS = {
 def load_gradient_matrix(path: Path) -> tuple:
     """Load gradient conflict matrix from .npz file."""
     data = np.load(path, allow_pickle=True)
-    G = data['averaged']
-    task_names = data['task_names'].tolist()
+    G = data['average_matrix'] if 'average_matrix' in data else data['averaged']
+    task_key = 'tasks' if 'tasks' in data else 'task_names'
+    task_names = list(data[task_key])
     return G, task_names
 
 

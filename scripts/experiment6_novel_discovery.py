@@ -335,8 +335,9 @@ def run_novel_discovery(
     # Load gradient matrix
     print(f"\nLoading gradient matrix from {gradient_matrix_path}...")
     data = np.load(gradient_matrix_path, allow_pickle=True)
-    G = data['averaged']
-    task_names = data['task_names'].tolist()
+    G = data['average_matrix'] if 'average_matrix' in data else data['averaged']
+    task_key = 'tasks' if 'tasks' in data else 'task_names'
+    task_names = list(data[task_key])
     print(f"Loaded {len(task_names)} tasks")
 
     # Find novel trade-offs

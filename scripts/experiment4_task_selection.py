@@ -62,8 +62,9 @@ TASK_NAMES = list(TOX21_TASKS.keys())
 def load_gradient_conflicts(path: Path) -> tuple[np.ndarray, list]:
     """Load gradient conflict matrix from previous GNN experiment."""
     data = np.load(path, allow_pickle=True)
-    matrix = data['averaged']
-    task_names = data['task_names'].tolist()
+    matrix = data['average_matrix'] if 'average_matrix' in data else data['averaged']
+    task_key = 'tasks' if 'tasks' in data else 'task_names'
+    task_names = list(data[task_key])
     return matrix, task_names
 
 

@@ -377,8 +377,9 @@ def run_representation_experiment(
     # Load GNN gradient matrix
     print(f"\nLoading GNN gradient matrix from {gnn_matrix_path}...")
     gnn_data = np.load(gnn_matrix_path, allow_pickle=True)
-    G_gnn = gnn_data['averaged']
-    task_names = gnn_data['task_names'].tolist()
+    G_gnn = gnn_data['average_matrix'] if 'average_matrix' in gnn_data else gnn_data['averaged']
+    task_key = 'tasks' if 'tasks' in gnn_data else 'task_names'
+    task_names = list(gnn_data[task_key])
     print(f"Loaded {len(task_names)} tasks")
 
     # Load Tox21 data and compute ECFP fingerprints

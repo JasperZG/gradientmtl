@@ -34,6 +34,7 @@ This document summarizes results from experiments investigating whether gradient
 | **Kinase Panel (21 tasks)** | ~20% | **0.666***† | ✅ Cross-family selectivity |
 | **JAK Family (4 tasks)** | ~50% | **0.919***† | ✅ Within-family validation |
 | MoleculeNet ADME | ~1% | 0.394 (n.s.) | ❌ Insufficient overlap |
+| TDC Multi-Property | ~80% | N/A | ❌ Too few compounds (127) |
 
 *100% overlap achieved by matching Tox21 compounds to existing ADME measurements
 †Kinase data from ChEMBL with 5039 compounds across 5 kinase families
@@ -812,8 +813,11 @@ The 12 Tox21 endpoints, while having 100% compound overlap, represent relatively
 | **Kinase Panel** | 21 kinases | 5,039 | ~20% | **Selectivity trade-offs validation** |
 | **JAK Family** | 4 kinases | 2,177 | ~50% | **Within-family validation** |
 | MoleculeNet ADME | 5-6 ADME | varies | ~1% | Failed (low overlap) |
+| **TDC Multi-Property** | 2 ADME | 127 | ~80% | **Failed (too few compounds)** |
 
 *Achieved by matching Tox21 compounds to existing ADME measurements in TDC/MoleculeNet
+
+**TDC Note:** While TDC datasets have good individual coverage, compound overlap between different ADME properties is very low (~127 compounds). This is insufficient for gradient-based analysis (need 500+ compounds).
 
 ---
 

@@ -33,12 +33,22 @@ from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 # PyTorch Geometric
 try:
-    from torch_geometric.data import Data
+    from torch_geometric.data import Data, Batch
     from torch_geometric.loader import DataLoader as PyGDataLoader
     from torch_geometric.nn import GCNConv, global_mean_pool
 except ImportError:
     print("Error: PyTorch Geometric not installed")
     sys.exit(1)
+
+
+def collate_tdc_batch(batch):
+    """Custom collate that properly stacks graph-level y and mask as 2D tensors."""
+    ys = torch.stack([g.y for g in batch])
+    masks = torch.stack([g.mask for g in batch])
+    batched = Batch.from_data_list(batch)
+    batched.y = ys
+    batched.mask = masks
+    return batched
 
 # RDKit
 try:
@@ -196,7 +206,7 @@ class TDCMultiPropertyDataset:
     def __getitem__(self, idx):
         graph = self.graphs[idx].clone()
         labels = torch.tensor([self.labels[t][idx] for t in self.tasks], dtype=torch.float)
-        masks = torch.tensor([self.masks[t][idx] for t in self.tasks], dtype=torch.bool)
+        masks = torch.tensor([bool(self.masks[t][idx]) for t in self.tasks], dtype=torch.bool)
         graph.y = labels
         graph.mask = masks
         return graph
@@ -282,11 +292,11 @@ class GradientConflictLogger:
             if loss is None or loss.item() == 0:
                 continue
 
-            retain = (i < len(task_losses) - 1)
+            # Always retain graph so we can still call backward() after
             grads = torch.autograd.grad(
                 outputs=loss,
                 inputs=encoder_params,
-                retain_graph=retain,
+                retain_graph=True,
                 allow_unused=True
             )
 
@@ -462,9 +472,10 @@ def main():
     val_dataset = TDCMultiPropertyDataset(str(data_path), tasks, 'val', seed=args.seed)
     test_dataset = TDCMultiPropertyDataset(str(data_path), tasks, 'test', seed=args.seed)
 
-    train_loader = PyGDataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, drop_last=True)
-    val_loader = PyGDataLoader(val_dataset, batch_size=args.batch_size)
-    test_loader = PyGDataLoader(test_dataset, batch_size=args.batch_size)
+    from torch.utils.data import DataLoader
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, drop_last=True, collate_fn=collate_tdc_batch)
+    val_loader = DataLoader(val_dataset, batch_size=args.batch_size, collate_fn=collate_tdc_batch)
+    test_loader = DataLoader(test_dataset, batch_size=args.batch_size, collate_fn=collate_tdc_batch)
 
     input_dim = train_dataset[0].x.shape[1]
     print(f"\nInput dimension: {input_dim}")
@@ -510,7 +521,7 @@ def main():
     for task, m in test_metrics.items():
         print(f"  {task}: RMSE={m['rmse']:.4f}, R²={m['r2']:.3f}")
 
-    gradient_logger.save(str(output_dir / 'gradient_conflict_matrices.npz'))
+    gradient_logger.save(str(output_dir / 'gradient_matrices.npz'))
 
     G = gradient_logger.get_average_matrix()
     print("\n" + "=" * 60)
