@@ -36,14 +36,16 @@ env/
 .pydevproject
 .settings/
 
-# Paper drafts (keep only camera-ready)
+# Paper and results (not for reproducibility repo)
 acm_format/
 icml2026/
 kdd/
 paper/
+iclrgradientpaper/
 iclrgradientpaper_short/
 example_paper.pdf
 paper_overleaf.zip
+RESULTS.md
 
 # Jupyter
 .ipynb_checkpoints/
@@ -70,23 +72,8 @@ data/*.tab
 data/qm9/
 *.csv.gz
 
-# Outputs directory - exclude everything except key results
-# First, exclude all outputs
-outputs/*
-
-# Keep the .gitkeep and specific result directories
-!outputs/.gitkeep
-!outputs/gradients/
-!outputs/sar_validation/
-!outputs/tox21_adme_results/
-!outputs/figures/
-
-# But within those directories, exclude large binary files
-outputs/**/*.pt
-outputs/**/*.npz
-
-# Explicitly keep the main gradient matrix (small, required for HPC)
-!outputs/gradients/gnn_conflict_matrices.npz
+# Outputs directory (generated at runtime)
+outputs/
 
 # Logs
 *.log

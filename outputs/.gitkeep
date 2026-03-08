@@ -1,2 +1,0 @@
-# This file keeps the outputs directory in git
-# Actual outputs are gitignored and regenerated during training
