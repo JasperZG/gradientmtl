@@ -36,8 +36,14 @@ env/
 .pydevproject
 .settings/
 
-# Claude Code
-.claude/
+# Paper drafts (keep only camera-ready)
+acm_format/
+icml2026/
+kdd/
+paper/
+iclrgradientpaper_short/
+example_paper.pdf
+paper_overleaf.zip
 
 # Jupyter
 .ipynb_checkpoints/
@@ -61,6 +67,7 @@ htmlcov/
 # Data files (downloaded during runtime)
 data/*.csv
 data/*.tab
+data/qm9/
 *.csv.gz
 
 # Outputs directory - exclude everything except key results
@@ -100,3 +107,17 @@ nul
 slurm-*.out
 *.out
 *.err
+
+# LaTeX build artifacts (keep .tex, .bib, .pdf, and style files)
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+*.lof
+*.lot
+*.nav
+*.snm
+*.vrb
