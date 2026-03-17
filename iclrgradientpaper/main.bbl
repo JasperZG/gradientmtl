@@ -1,0 +1,197 @@
+\begin{thebibliography}{27}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Achille et~al.(2019)Achille, Lam, Tewari, Ravichandran, Maji, Fowlkes,
+  Soatto, and Perona]{achille2019task2vec}
+Alessandro Achille, Michael Lam, Rahul Tewari, Avinash Ravichandran, Subhransu
+  Maji, Charless~C Fowlkes, Stefano Soatto, and Pietro Perona.
+\newblock Task2vec: Task embedding for meta-learning.
+\newblock In \emph{Proceedings of the IEEE/CVF International Conference on
+  Computer Vision}, pp.\  6430--6439, 2019.
+
+\bibitem[Caruana(1997)]{caruana1997multitask}
+Rich Caruana.
+\newblock Multitask learning.
+\newblock \emph{Machine Learning}, 28\penalty0 (1):\penalty0 41--75, 1997.
+
+\bibitem[Chen et~al.(2018)Chen, Badrinarayanan, Lee, and
+  Rabinovich]{chen2018gradnorm}
+Zhao Chen, Vijay Badrinarayanan, Chen-Yu Lee, and Andrew Rabinovich.
+\newblock Gradnorm: Gradient normalization for adaptive loss balancing in deep
+  multitask networks.
+\newblock In \emph{International Conference on Machine Learning}, pp.\
+  794--803. PMLR, 2018.
+
+\bibitem[Davis et~al.(2011)Davis, Hunt, Herrgard, Ciceri, Wodicka, Pallares,
+  Hocker, Treiber, and Zarrinkar]{davis2011kinase}
+Mindy~I Davis, Jeremy~P Hunt, Sanna Herrgard, Pietro Ciceri, Lisa~M Wodicka,
+  Gabriel Pallares, Michael Hocker, Daniel~K Treiber, and Patrick~P Zarrinkar.
+\newblock Comprehensive analysis of kinase inhibitor selectivity.
+\newblock \emph{Nature Biotechnology}, 29\penalty0 (11):\penalty0 1046--1051,
+  2011.
+
+\bibitem[Fifty et~al.(2021)Fifty, Amid, Zhao, Yu, Anil, and
+  Finn]{fifty2021efficiently}
+Chris Fifty, Ehsan Amid, Zhe Zhao, Tianhe Yu, Rohan Anil, and Chelsea Finn.
+\newblock Efficiently identifying task groupings for multi-task learning.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~34, pp.\  27503--27516, 2021.
+
+\bibitem[Gaulton et~al.(2012)Gaulton, Bellis, Bento, Chambers, Davies, Hersey,
+  Light, McGlinchey, Michalovich, Al-Lazikani, and
+  Overington]{gaulton2012chembl}
+Anna Gaulton, Louisa~J Bellis, A~Patricia Bento, Jon Chambers, Mark Davies,
+  Anne Hersey, Yvonne Light, Shaun McGlinchey, David Michalovich, Bissan
+  Al-Lazikani, and John~P Overington.
+\newblock Chembl: a large-scale bioactivity database for drug discovery.
+\newblock \emph{Nucleic Acids Research}, 40\penalty0 (D1):\penalty0
+  D1100--D1107, 2012.
+
+\bibitem[Gilmer et~al.(2017)Gilmer, Schoenholz, Riley, Vinyals, and
+  Dahl]{gilmer2017neural}
+Justin Gilmer, Samuel~S Schoenholz, Patrick~F Riley, Oriol Vinyals, and
+  George~E Dahl.
+\newblock Neural message passing for quantum chemistry.
+\newblock pp.\  1263--1272, 2017.
+
+\bibitem[Hu et~al.(2020)Hu, Liu, Gomes, Zitnik, Liang, Pande, and
+  Leskovec]{hu2020pretraining}
+Weihua Hu, Bowen Liu, Joseph Gomes, Marinka Zitnik, Percy Liang, Vijay Pande,
+  and Jure Leskovec.
+\newblock Strategies for pre-training graph neural networks.
+\newblock In \emph{International Conference on Learning Representations}, 2020.
+
+\bibitem[Huang et~al.(2021)Huang, Fu, Gao, Zhao, Roohani, Leskovec, Coley,
+  Xiao, Sun, and Zitnik]{huang2021therapeutics}
+Kexin Huang, Tianfan Fu, Wenhao Gao, Yue Zhao, Yusuf Roohani, Jure Leskovec,
+  Connor~W Coley, Cao Xiao, Jimeng Sun, and Marinka Zitnik.
+\newblock Therapeutics data commons: Machine learning datasets and tasks for
+  drug discovery and development.
+\newblock \emph{NeurIPS Track on Datasets and Benchmarks}, 2021.
+
+\bibitem[Hubert \& Arabie(1985)Hubert and Arabie]{hubert1985ari}
+Lawrence Hubert and Phipps Arabie.
+\newblock Comparing partitions.
+\newblock \emph{Journal of Classification}, 2\penalty0 (1):\penalty0 193--218,
+  1985.
+
+\bibitem[Kendall et~al.(2018)Kendall, Gal, and Cipolla]{kendall2018multi}
+Alex Kendall, Yarin Gal, and Roberto Cipolla.
+\newblock Multi-task learning using uncertainty to weigh losses for scene
+  geometry and semantics.
+\newblock In \emph{Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}, pp.\  7482--7491, 2018.
+
+\bibitem[Kipf \& Welling(2017)Kipf and Welling]{kipf2017semi}
+Thomas~N Kipf and Max Welling.
+\newblock Semi-supervised classification with graph convolutional networks.
+\newblock \emph{International Conference on Learning Representations}, 2017.
+
+\bibitem[Kuhn et~al.(2016)Kuhn, Letunic, Jensen, and Bork]{kuhn2016sider}
+Michael Kuhn, Ivica Letunic, Lars~Juhl Jensen, and Peer Bork.
+\newblock The sider database of drugs and side effects.
+\newblock \emph{Nucleic Acids Research}, 44\penalty0 (D1):\penalty0
+  D1075--D1079, 2016.
+
+\bibitem[Liu et~al.(2021)Liu, Liu, Jin, Stone, and Liu]{liu2021conflict}
+Bo~Liu, Xingchao Liu, Xiaojie Jin, Peter Stone, and Qiang Liu.
+\newblock Conflict-averse gradient descent for multi-task learning.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~34, pp.\  18878--18890, 2021.
+
+\bibitem[Navon et~al.(2022)Navon, Shamsian, Achituve, Maron, Kawaguchi,
+  Chechik, and Fetaya]{navon2022multi}
+Aviv Navon, Aviv Shamsian, Idan Achituve, Haggai Maron, Kenji Kawaguchi, Gal
+  Chechik, and Ethan Fetaya.
+\newblock Multi-task learning as a bargaining game.
+\newblock In \emph{International Conference on Machine Learning}, pp.\
+  16428--16446. PMLR, 2022.
+
+\bibitem[Rogers \& Hahn(2010)Rogers and Hahn]{rogers2010ecfp}
+David Rogers and Mathew Hahn.
+\newblock Extended-connectivity fingerprints.
+\newblock \emph{Journal of Chemical Information and Modeling}, 50\penalty0
+  (5):\penalty0 742--754, 2010.
+
+\bibitem[Ruder(2017)]{ruder2017overview}
+Sebastian Ruder.
+\newblock An overview of multi-task learning in deep neural networks.
+\newblock \emph{arXiv preprint arXiv:1706.05098}, 2017.
+
+\bibitem[Sener \& Koltun(2018)Sener and Koltun]{sener2018multi}
+Ozan Sener and Vladlen Koltun.
+\newblock Multi-task learning as multi-objective optimization.
+\newblock In \emph{Advances in Neural Information Processing Systems},
+  volume~31, 2018.
+
+\bibitem[Standley et~al.(2020)Standley, Zamir, Chen, Guibas, Malik, and
+  Savarese]{standley2020tasks}
+Trevor Standley, Amir Zamir, Dawn Chen, Leonidas Guibas, Jitendra Malik, and
+  Silvio Savarese.
+\newblock Which tasks should be learned together in multi-task learning?
+\newblock In \emph{International Conference on Machine Learning}, pp.\
+  9120--9132. PMLR, 2020.
+
+\bibitem[Veli{\v{c}}kovi{\'{c}} et~al.(2018)Veli{\v{c}}kovi{\'{c}}, Cucurull,
+  Casanova, Romero, Li{\`{o}}, and Bengio]{velickovic2018gat}
+Petar Veli{\v{c}}kovi{\'{c}}, Guillem Cucurull, Arantxa Casanova, Adriana
+  Romero, Pietro Li{\`{o}}, and Yoshua Bengio.
+\newblock Graph attention networks.
+\newblock In \emph{International Conference on Learning Representations}, 2018.
+
+\bibitem[Wang et~al.(2019)Wang, Dai, P{\'o}czos, and
+  Carbonell]{wang2019negative}
+Zirui Wang, Zihang Dai, Barnab{\'a}s P{\'o}czos, and Jaime Carbonell.
+\newblock Characterizing and avoiding negative transfer.
+\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
+  and Pattern Recognition}, pp.\  11293--11302, 2019.
+
+\bibitem[Weininger(1988)]{weininger1988smiles}
+David Weininger.
+\newblock Smiles, a chemical language and information system. 1. introduction
+  to methodology and encoding rules.
+\newblock \emph{Journal of Chemical Information and Computer Sciences},
+  28\penalty0 (1):\penalty0 31--36, 1988.
+
+\bibitem[Wu et~al.(2018)Wu, Ramsundar, Feinberg, Gomes, Geniesse, Pappu,
+  Leswing, and Pande]{wu2018moleculenet}
+Zhenqin Wu, Bharath Ramsundar, Evan~N Feinberg, Joseph Gomes, Caleb Geniesse,
+  Aneesh~S Pappu, Karl Leswing, and Vijay Pande.
+\newblock Moleculenet: a benchmark for molecular machine learning.
+\newblock \emph{Chemical Science}, 9\penalty0 (2):\penalty0 513--530, 2018.
+
+\bibitem[Yang et~al.(2019)Yang, Swanson, Jin, Coley, Eiden, Gao, Guzman-Perez,
+  Hopper, Kelley, Mathea, et~al.]{yang2019analyzing}
+Kevin Yang, Kyle Swanson, Wengong Jin, Connor Coley, Philipp Eiden, Hua Gao,
+  Angel Guzman-Perez, Timothy Hopper, Brian Kelley, Miriam Mathea, et~al.
+\newblock Analyzing learned molecular representations for property prediction.
+\newblock \emph{Journal of Chemical Information and Modeling}, 59\penalty0
+  (8):\penalty0 3370--3388, 2019.
+
+\bibitem[Yu et~al.(2020)Yu, Kumar, Gupta, Levine, Hausman, and
+  Finn]{yu2020gradient}
+Tianhe Yu, Saurabh Kumar, Abhishek Gupta, Sergey Levine, Karol Hausman, and
+  Chelsea Finn.
+\newblock Gradient surgery for multi-task learning.
+\newblock \emph{Advances in Neural Information Processing Systems},
+  33:\penalty0 5824--5836, 2020.
+
+\bibitem[Zamir et~al.(2018)Zamir, Sax, Shen, Guibas, Malik, and
+  Savarese]{zamir2018taskonomy}
+Amir~R Zamir, Alexander Sax, William Shen, Leonidas~J Guibas, Jitendra Malik,
+  and Silvio Savarese.
+\newblock Taskonomy: Disentangling task transfer learning.
+\newblock In \emph{Proceedings of the IEEE Conference on Computer Vision and
+  Pattern Recognition}, pp.\  3712--3722, 2018.
+
+\bibitem[Zhang \& Yang(2021)Zhang and Yang]{zhang2021survey}
+Yu~Zhang and Qiang Yang.
+\newblock A survey on multi-task learning.
+\newblock \emph{IEEE Transactions on Knowledge and Data Engineering},
+  34\penalty0 (12):\penalty0 5586--5609, 2021.
+
+\end{thebibliography}
