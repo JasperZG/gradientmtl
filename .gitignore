@@ -37,7 +37,6 @@ env/
 .settings/
 
 # Paper and results (not for reproducibility repo)
-acm_format/
 icml2026/
 kdd/
 paper/
