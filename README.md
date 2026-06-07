@@ -1,5 +1,9 @@
 # Gradient Conflict Analysis for Multi-Task Molecular Learning
 
+**Authors:** Jasper Zhang, Bryan Cheng
+
+**Accepted to ACM-BCB 2026** (ACM Conference on Bioinformatics, Computational Biology, and Health Informatics).
+
 Code to reproduce the gradient-conflict / sample-overlap analysis for multi-task
 molecular property prediction. The repository is **code only** — no manuscript or
 paper files are tracked here; all reported numbers are regenerated from the scripts
