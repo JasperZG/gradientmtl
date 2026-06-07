@@ -36,15 +36,24 @@ env/
 .pydevproject
 .settings/
 
-# Paper and results (not for reproducibility repo)
+# Paper and manuscript files (this is a code-only reproducibility repo)
 icml2026/
 kdd/
 paper/
+acm_format/
 iclrgradientpaper/
 iclrgradientpaper_short/
 example_paper.pdf
 paper_overleaf.zip
 RESULTS.md
+# LaTeX sources, compiled papers, and submission bundles
+*.tex
+*.pdf
+*.tar.gz
+*.bib
+*.sty
+*.bst
+*.cls
 
 # Jupyter
 .ipynb_checkpoints/
