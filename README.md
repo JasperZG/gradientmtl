@@ -2,7 +2,7 @@
 
 **Authors:** Jasper Zhang, Bryan Cheng
 
-**Accepted to ACM-BCB 2026** (ACM Conference on Bioinformatics, Computational Biology, and Health Informatics).
+**Accepted to ACM-BCB 2026** (ACM Conference on Bioinformatics, Computational Biology, and Health Informatics) and to an **ICLR 2026 Workshop**.
 
 Code to reproduce the gradient-conflict / sample-overlap analysis for multi-task
 molecular property prediction. The repository is **code only** — no manuscript or
